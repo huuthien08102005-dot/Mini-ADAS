@@ -56,25 +56,5 @@ Mã nguồn được tổ chức theo mô hình kiến trúc phân tầng chức
 
 ---
 
-## 📈 Đánh Giá Hệ Thống & Hướng Phát Triển
-
-### Ưu điểm
-- Chương trình biên dịch gọn nhẹ, thực thi thời gian thực tốc độ cao do can thiệp trực tiếp mức thanh ghi.
-- Thuật toán FSM phân vùng cảnh báo rõ ràng, đáp ứng tốt kiểm thử thực nghiệm hành trình.
-
-### Hạn chế hiện tại
-- Hệ thống đang dùng cơ chế Polling liên tục và hàm Delay Blocking làm tiêu tốn tài nguyên CPU.
-- Đo khoảng cách siêu âm bằng định thời phần mềm (Software Timing) dễ bị nhiễu môi trường.
-
-### Hướng nâng cấp (Roadmap)
-- [ ] Chuyển đổi sang sử dụng kỹ thuật **Timer Input Capture** để đo xung Echo chính xác tuyệt đối.
-- [ ] Tích hợp bộ băm xung **PWM** để điều khiển giảm tốc mượt mà thay vì ON/OFF động cơ cơ bản.
-- [ ] Triển khai hệ điều hành thời gian thực **RTOS** và quản lý các tác vụ bằng cơ chế ngắt (Interrupt).
-- [ ] Mở rộng thuật toán xử lý ảnh trên Camera OV7670 và thiết kế màn hình hiển thị LCD/OLED trực tiếp trên xe.
-
----
-
-## 👥 Thành Viên Thực Hiện
-Dự án được thực hiện trong khuôn khổ môn học *Nhập môn Hệ thống nhúng (ELT3240_1)* - Trường Đại học Công nghệ, Đại học Quốc gia Hà Nội:
-- **Đặng Trung Nguyên** (MSV: 23021877) - Thiết kế mạch, lắp ráp xe, kiểm tra kiểm thử và viết báo cáo.
-- **Trần Hữu Thiện** (MSV: 23021921) - Thiết kế thuật toán, phát triển mã nguồn nhúng trên STM32.
+## Ảnh và video demo
+https://drive.google.com/drive/folders/1GjRb96OccXD1gqO8cQwZYIpfPNrYQmZf?usp=sharing
