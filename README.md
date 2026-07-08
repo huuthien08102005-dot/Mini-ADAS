@@ -1,4 +1,4 @@
-# Mini ADAS (Advanced Driver Assistance Systems) 🚗🛡️
+# Mini ADAS
 
 Mini ADAS là một hệ thống hỗ trợ lái xe nâng cao phiên bản thu nhỏ, được xây dựng trên nền tảng vi điều khiển cấu trúc ARM Cortex-M4 (**STM32F401RET6**). Dự án này tích hợp các cảm biến đo khoảng cách và phát hiện vật cản nhằm mục đích xử lý dữ liệu thời gian thực, cảnh báo va chạm và thực hiện việc điều khiển xe tự hành tránh chướng ngại vật một cách thông minh (Sensor Fusion & Object Tracking).
 
