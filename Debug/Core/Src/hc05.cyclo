@@ -1,0 +1,3 @@
+../Core/Src/hc05.c:3:6:HC05_Init	1
+../Core/Src/hc05.c:34:6:HC05_SendChar	2
+../Core/Src/hc05.c:40:6:HC05_SendString	2

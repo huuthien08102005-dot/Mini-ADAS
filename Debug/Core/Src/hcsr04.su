@@ -1,0 +1,3 @@
+../Core/Src/hcsr04.c:7:6:delay_us	24	static
+../Core/Src/hcsr04.c:14:6:HCSR04_Init	4	static
+../Core/Src/hcsr04.c:25:5:HCSR04_Read	16	static

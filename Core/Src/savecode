@@ -1,0 +1,17 @@
+RCC->AHB1ENR |= (1<<0);
+RCC->APB2ENR |= (1<<0);
+
+GPIOA->MODER |= (2<<18); 
+GPIOA->AFR[1] |= (1<<4);
+
+
+TIM1->PSC = 83;
+TIM1->ARR = 999;
+TIM1->CCR2 = 700;
+
+TIM1->CCMR1 |= (6<<12);
+TIM1->CCMR1 |= (1<<11);
+
+TIM1->CCER |= (1<<4);
+
+TIM1->CR1 |= (1<<0);

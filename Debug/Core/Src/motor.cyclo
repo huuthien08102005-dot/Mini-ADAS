@@ -1,0 +1,10 @@
+../Core/Src/motor.c:7:6:delay_motor	2
+../Core/Src/motor.c:16:6:Motor_Init	1
+../Core/Src/motor.c:113:6:Motor_SetSpeed	2
+../Core/Src/motor.c:131:6:Motor_Forward	1
+../Core/Src/motor.c:154:6:Motor_Backward	1
+../Core/Src/motor.c:169:6:Motor_Left	1
+../Core/Src/motor.c:184:6:Motor_Right	1
+../Core/Src/motor.c:199:6:Motor_Stop	1
+../Core/Src/motor.c:218:7:Calculate_SafeDistance	1
+../Core/Src/motor.c:241:6:Motor_SafeControl	5

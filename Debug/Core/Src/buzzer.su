@@ -1,0 +1,4 @@
+../Core/Src/buzzer.c:9:6:Buzzer_Init	4	static
+../Core/Src/buzzer.c:28:6:Buzzer_ON	4	static
+../Core/Src/buzzer.c:37:6:Buzzer_OFF	4	static
+../Core/Src/buzzer.c:46:6:Buzzer_Control	24	static

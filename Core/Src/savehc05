@@ -1,0 +1,60 @@
+#include "hc05.h"
+
+void HC05_Init(void)
+{
+    /********************************************
+        Enable Clock (Giữ nguyên của bạn)
+    ********************************************/
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
+    RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
+
+    /********************************************
+        PA9 = TX , PA10 = RX (Chế độ Alternate Function)
+    ********************************************/
+    GPIOA->MODER &= ~((3<<18) | (3<<20));
+    GPIOA->MODER |=  ((2<<18) | (2<<20));
+
+    /********************************************
+        [BỔ SUNG CHÍ MẠNG 1]: ÉP CHÂN CHẠY HIGH SPEED
+        Để các cạnh xung vuông sắc nét, không bị bo tròn méo bit
+    ********************************************/
+    GPIOA->OSPEEDR &= ~((3<<18) | (3<<20));
+    GPIOA->OSPEEDR |=  ((2<<18) | (2<<20)); // Chọn 10 = High speed
+
+    /********************************************
+        [BỔ SUNG CHÍ MẠNG 2]: BẬT ĐIỆN TRỞ KÉO LÊN (PULL-UP)
+        Giữ đường truyền UART ổn định ở mức HIGH khi nghỉ
+    ********************************************/
+    GPIOA->PUPDR &= ~((3<<18) | (3<<20));
+    GPIOA->PUPDR |=  ((1<<18) | (1<<20));  // Chọn 01 = Pull-up
+
+    /********************************************
+        AF7 USART1 (Giữ nguyên của bạn)
+    ********************************************/
+    GPIOA->AFR[1] &= ~((0xF<<4) | (0xF<<8));
+    GPIOA->AFR[1] |=  ((7<<4) | (7<<8));
+
+    /********************************************
+        Baud = 9600 ở tần số mặc định
+    ********************************************/
+    USART1->BRR = 0x0196;
+
+    /********************************************
+        Enable TX, RX và USART1
+    ********************************************/
+    USART1->CR1 |= (USART_CR1_TE | USART_CR1_RE | USART_CR1_UE);
+}
+
+void HC05_SendChar(char c)
+{
+    USART1->DR = c;
+    while(!(USART1->SR & USART_SR_TC)); // Chờ truyền xong hoàn toàn dữ liệu
+}
+
+void HC05_SendString(char *str)
+{
+    while(*str)
+    {
+        HC05_SendChar(*str++);
+    }
+}

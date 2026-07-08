@@ -1,0 +1,266 @@
+#include "stm32f4xx.h"
+
+#include "hcsr04.h"
+#include "led.h"
+#include "uart.h"
+#include "buzzer.h"
+#include "hc05.h"
+#include "ov7670.h"
+#include "motor.h"
+
+#include <stdio.h>
+
+char msg[100];
+
+extern int distance;
+
+/************************************************
+                    DELAY
+************************************************/
+
+void delay_ms(uint32_t time)
+{
+    for(uint32_t i=0;i<time*4000;i++);
+}
+
+/************************************************
+                    MAIN
+************************************************/
+
+int main(void)
+{
+    /********************************************
+                        INIT
+    ********************************************/
+
+    HCSR04_Init();
+
+    LED_Init();
+
+    UART2_Init();
+
+    Buzzer_Init();
+
+    HC05_Init();
+
+    OV7670_Init();
+
+    Motor_Init();
+
+    UART_SendString("SYSTEM STARTED\r\n");
+
+    HC05_SendString("HC05 CONNECTED\r\n");
+
+    UART_SendString("CAMERA READY\r\n");
+
+    HC05_SendString("CAMERA READY\r\n");
+
+    /********************************************
+                CAR SPEED
+    ********************************************/
+
+    float car_speed = 40.0;
+
+    while(1)
+    {
+        /****************************************
+                READ DISTANCE
+        ****************************************/
+
+        distance = HCSR04_Read();
+
+        /****************************************
+                FORMAT STRING
+        ****************************************/
+
+        sprintf(msg,
+                "Distance = %d cm\r\n",
+                distance);
+
+        /****************************************
+                SEND UART
+        ****************************************/
+
+        UART_SendString(msg);
+
+        HC05_SendString(msg);
+
+        /****************************************
+                CAMERA MOTION
+        ****************************************/
+
+        if(OV7670_MotionDetect())
+        {
+            UART_SendString("MOTION DETECTED\r\n");
+
+            HC05_SendString("MOTION DETECTED\r\n");
+        }
+        else
+        {
+            UART_SendString("NO MOTION\r\n");
+
+            HC05_SendString("NO MOTION\r\n");
+        }
+
+        /****************************************
+            SAFE DISTANCE CONTROL
+
+            d = vt + v² / 2a
+        ****************************************/
+
+        Motor_SafeControl(car_speed,
+                          distance);
+
+        /****************************************
+                    SAFE
+        ****************************************/
+
+        if(distance > 100)
+        {
+            /************************************
+                    LED
+            ************************************/
+
+            Warning_LED_OFF();
+
+            Danger_LED_OFF();
+
+            /************************************
+                    BUZZER
+            ************************************/
+
+            Buzzer_OFF();
+
+            /************************************
+                    MOTOR SPEED
+            ************************************/
+
+            Motor_SetSpeed(900,900);
+
+            UART_SendString("SAFE SPEED\r\n");
+
+            HC05_SendString("SAFE SPEED\r\n");
+        }
+
+        /****************************************
+                    WARNING
+        ****************************************/
+
+        else if(distance >= 50 &&
+                distance <= 100)
+        {
+            /************************************
+                    LED
+            ************************************/
+
+            Warning_LED_ON();
+
+            Danger_LED_OFF();
+
+            /************************************
+                    BUZZER
+            ************************************/
+
+            Buzzer_OFF();
+
+            /************************************
+                REDUCE SPEED
+            ************************************/
+
+            Motor_SetSpeed(600,600);
+
+            UART_SendString("WARNING SPEED\r\n");
+
+            HC05_SendString("WARNING SPEED\r\n");
+        }
+
+        /****************************************
+                    DANGER
+        ****************************************/
+
+        else
+        {
+            /************************************
+                    LED
+            ************************************/
+
+            Warning_LED_OFF();
+
+            Danger_LED_ON();
+
+            /************************************
+                    BUZZER
+            ************************************/
+
+            Buzzer_Control(distance);
+
+            /************************************
+                VERY DANGEROUS
+            ************************************/
+
+            if(distance < 20)
+            {
+                /********************************
+                        STOP
+                ********************************/
+
+                Motor_Stop();
+
+                UART_SendString("EMERGENCY STOP\r\n");
+
+                HC05_SendString("EMERGENCY STOP\r\n");
+
+                delay_ms(300);
+
+                /********************************
+                    BACKWARD
+                ********************************/
+
+                Motor_Backward();
+
+                Motor_SetSpeed(500,500);
+
+                delay_ms(500);
+
+                /********************************
+                    TURN RIGHT
+                ********************************/
+
+                Motor_Right();
+
+                Motor_SetSpeed(600,600);
+
+                delay_ms(600);
+
+                /********************************
+                        STOP
+                ********************************/
+
+                Motor_Stop();
+
+                delay_ms(300);
+            }
+
+            /************************************
+                DANGER BUT MOVING
+            ************************************/
+
+            else
+            {
+                /********************************
+                    VERY LOW SPEED
+                ********************************/
+
+                Motor_SetSpeed(300,300);
+
+                Motor_Forward();
+
+                UART_SendString("LOW SPEED\r\n");
+
+                HC05_SendString("LOW SPEED\r\n");
+            }
+        }
+
+        delay_ms(100);
+    }
+}
